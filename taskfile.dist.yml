@@ -1,0 +1,27 @@
+version: '3'
+
+tasks:
+  dev:
+    cmds:
+      - nr dev {{.CLI_ARGS}}
+    dir: "packages/core"
+
+  build:
+    cmds:
+      - bun build --compile core/index.ts --outfile lastfm
+    dir: "packages"
+
+  container:up:
+    cmds:
+      - docker run -itd --name lastfm-broker $(docker build -q .)
+    dir: "."
+
+  container:down:
+    cmds:
+      - docker stop lastfm-broker
+
+  container:restart:
+    cmds:
+      - docker stop lastfm
+      - docker run -itd --name lastfm.-broker $(docker build -q .)
+    dir: "."

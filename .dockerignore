@@ -1,0 +1,10 @@
+**/*/.gitignore
+**/*/.git
+**/*/node_modules
+taskfile.dist.yml
+
+# generated / build files
+lastfm
+packages/core/lastfm
+packages/core/output.txt
+README.md

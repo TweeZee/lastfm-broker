@@ -1,0 +1,10 @@
+{
+  "name": "mqtt-client",
+  "module": "index.ts",
+  "dependencies": {
+    "env": "workspace:*",
+    "mqtt": "^5.10.1",
+    "shared": "workspace:*",
+    "zod": "^3.23.8"
+  }
+}

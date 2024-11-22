@@ -1,0 +1,8 @@
+{
+  "name": "file-dump",
+  "module": "index.ts",
+  "dependencies": {
+    "env": "workspace:*",
+    "shared": "workspace:*"
+  }
+}
