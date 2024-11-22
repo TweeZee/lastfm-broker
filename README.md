@@ -3,6 +3,12 @@
 Small tool to continuously fetch current track information and pass it to simple, customizable hooks e.g. dumping into a text file for a now-playing-bar in livestreams or publishing it to your home assistant via MQTT.
 Bare-bones, with support for configuration via command line arguments, .env files and a typescript config file.
 
+## Available Hooks
+- [MQTT](packages/hooks/mqtt-client) - publish the current track info to a MQTT broker
+- [File Dump](packages/hooks/file-dump) - write the current track info to a text file
+- [HTTP Server](packages/hooks/http-server) - expose the current track info via a simple HTTP endpoint
+- [GeekMagic](packages/hooks/geekmagic) - send the current track's album cover to a [GeekMagic device](https://www.aliexpress.com/store/1102731495)
+
 
 ## Configuration and Development
 
