@@ -22,6 +22,6 @@ tasks:
 
   container:restart:
     cmds:
-      - docker stop lastfm
-      - docker run -itd --name lastfm.-broker $(docker build -q .)
+      - docker stop lastfm-broker
+      - docker run -itd --name lastfm-broker $(docker build -q .)
     dir: "."
