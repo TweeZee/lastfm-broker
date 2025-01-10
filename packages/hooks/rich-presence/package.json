@@ -1,9 +1,9 @@
 {
-  "name": "mqtt-client",
+  "name": "rich-presence",
   "module": "index.ts",
   "dependencies": {
+    "@discord/embedded-app-sdk": "^1.6.1",
     "env": "workspace:*",
-    "mqtt": "^5.10.1",
     "shared": "workspace:*",
     "zod": "^3.23.8"
   }

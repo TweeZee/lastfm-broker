@@ -93,7 +93,7 @@ export async function main() {
 
         const result = results.get(currentlyTrackedUser) ?? recentTrackResult;
 
-        if (!result.success) {
+        if (!result?.success) {
             logger.warn(`Failed to fetch recent tracks from Last.fm, trying again in ${env.REQUEST_INTERVAL_MS / 1000} seconds`);
             return undefined;
         }

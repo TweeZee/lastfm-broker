@@ -6,6 +6,7 @@ import {LastHook} from "shared/src/model/hook.ts";
 type GeekMagicConfig = {
     url: string;
     coverFileName?: string;
+    autoSwitch?: boolean;
 }
 
 type SpaceInfo = {
@@ -19,6 +20,10 @@ class GeekMagicHook implements LastHook {
     private static COVER_FILE_NAME = "cover.jpg";
     private lastCoverUrl: string;
 
+    private themeState: number;
+    private playingState = false;
+    private imagePathState: string;
+
     private logger: LoggingFacade = new LoggingFacade({name: 'GeekMagic', color: "orange"});
 
     constructor(protected config: GeekMagicConfig, protected env: Env) {
@@ -26,6 +31,37 @@ class GeekMagicHook implements LastHook {
             this.logger.warn('URL is required for GeekMagicHook');
             throw new Error('URL is required for GeekMagicHook');
         }
+
+        if (!config.autoSwitch) {
+            return;
+        }
+
+        this.getThemeState()
+            .then(async ({theme}) => theme === 3 ? {theme, filePath: await this.getActiveImage()} : {theme})
+            .then(({theme, filePath}) => {
+                this.themeState = theme;
+                if (filePath) {
+                    this.imagePathState = filePath;
+                }
+            });
+    }
+
+    async getThemeState() {
+        return await fetch(`${this.config.url}/app.json`)
+            .then((res) => res.json() as Promise<ThemeState>);
+    }
+
+    async setTheme(theme: number) {
+        return await fetch(`${this.config.url}/set?theme=${theme}`);
+    }
+
+    async setActiveImage(filePath: string) {
+        return await fetch(`${this.config.url}/set?img=${filePath}`);
+    }
+
+    async getActiveImage() {
+        return await fetch(`${this.config.url}/img.json`)
+            .then((res) => res.json() as Promise<ImageState>);
     }
 
     async onTrackChange(track: Track) {
@@ -33,6 +69,22 @@ class GeekMagicHook implements LastHook {
             this.logger.warn('GeekMagic URL not set');
             return;
         }
+
+        if (this.config.autoSwitch) {
+            if (!this.playingState && track.attr.nowplaying) {
+                this.themeState = (await this.getThemeState()).theme;
+                await this.setTheme(3); // TODO check for SmallTV model and use according Photo Album theme
+                //TODO if prev state was a photo also get the file path so that it can be changed back
+                this.imagePathState = (await this.getActiveImage()).img;
+                await this.setActiveImage(GeekMagicHook.COVER_FILE_NAME);
+
+            } else if (this.playingState && !track.attr.nowplaying) {
+                await this.setTheme(this.themeState);
+                await this.setActiveImage(this.imagePathState);
+            }
+        }
+
+        this.playingState = track.attr.nowplaying;
 
         if (!track.image) {
             this.logger.warn('No image found in track data');
@@ -106,4 +158,12 @@ class GeekMagicHook implements LastHook {
             body: formData,
         });
     }
+}
+
+type ThemeState = {
+    theme: number;
+}
+
+type ImageState = {
+    img: string;
 }
