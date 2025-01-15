@@ -8,7 +8,7 @@ Bare-bones, with support for configuration via command line arguments, .env file
 - [File Dump](packages/hooks/file-dump) - write the current track info to a text file
 - [HTTP Server](packages/hooks/http-server) - expose the current track info via a simple HTTP endpoint
 - [GeekMagic](packages/hooks/geekmagic) - send the current track's album cover to a [GeekMagic device](https://www.aliexpress.com/store/1102731495)
-
+- [Mattermost Status](packages/hooks/mattermost-status) - set your custom Mattermost status to the current track
 
 ## Configuration and Development
 

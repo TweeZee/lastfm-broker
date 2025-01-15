@@ -1,6 +1,5 @@
 import type {Env} from "env";
-import {LoggingFacade, Track} from "shared";
-import {LastHook} from "shared/src/model/hook.ts";
+import {LastHook, LoggingFacade, Track} from "shared";
 import {Elysia} from "elysia";
 
 type HttpServerConfig = {

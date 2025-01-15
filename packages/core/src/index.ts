@@ -59,7 +59,7 @@ export async function main() {
             return;
         }
 
-        logger.log(dye`Received new track: ${"lightblue"}${formatted}`);
+        logger.log(formatted.length ? dye`Received new track: ${"lightblue"}${formatted}`: "Received empty track");
         current = formatted;
 
         for (const hook of activeHooks) {

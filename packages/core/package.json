@@ -19,6 +19,7 @@
     "file-dump": "workspace:*",
     "geekmagic": "workspace:*",
     "http-server": "workspace:*",
+    "mattermost-status": "workspace:*",
     "mqtt-client": "workspace:*",
     "sharp": "^0.33.5",
     "shared": "workspace:*",
