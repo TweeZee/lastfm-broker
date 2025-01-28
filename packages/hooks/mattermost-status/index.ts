@@ -31,28 +31,30 @@ class MattermostStatus implements LastHook {
 
         return await this.setCustomStatus(formatTrack(track))
             .then((res: Response) => res.json() as Promise<{ status: string }>)
-            .then((res) => res?.status !== "OK" && this.logger.warn(res));
+            .then((res) => void (res?.status !== "OK" && this.logger.warn(res)))
+            .catch((e) => this.logger.error(`Error setting status: ${JSON.stringify(e)}`));
     }
 
-    teardown(): Promise<void> {
-        return Promise.resolve();
+    async teardown(): Promise<void> {
+        // Clear status
+        return await this.setCustomStatus("");
     }
 
     private async setCustomStatus(status: string) {
         this.logger.info(status.length ? "Setting status" : "Clearing status");
 
         const req = new Request(`${this.config.url}/api/v4/users/me/status/custom`, {
-            method: 'PUT',
+            method: status.length ? 'PUT' : 'DELETE',
             mode: 'cors',
             headers: {
                 'Authorization': `Bearer ${this.config.token}`
             },
-            body: JSON.stringify({
+            body: status.length ? JSON.stringify({
                 emoji: this.config.emoji,
                 text: status,
-            }),
+            }) : undefined,
         });
 
-        return await fetch(req).catch((e) => this.logger.error(`Error setting status: ${JSON.stringify(e)}`));
+        return await fetch(req).catch((e) => this.logger.error(`Error ${status.length ? 'setting' : 'clearing'} status: ${JSON.stringify(e)}`));
     }
 }
