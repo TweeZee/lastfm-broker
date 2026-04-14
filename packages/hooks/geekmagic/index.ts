@@ -6,6 +6,7 @@ import {LastHook} from "shared/src/model/hook.ts";
 type GeekMagicConfig = {
     url: string;
     coverFileName?: string;
+    timeoutMs?: number;
 }
 
 type SpaceInfo = {
@@ -16,7 +17,8 @@ type SpaceInfo = {
 export const geekMagic = (config: GeekMagicConfig) => (env: Env) => new GeekMagicHook(config, env);
 
 class GeekMagicHook implements LastHook {
-    private static COVER_FILE_NAME = "cover.jpg";
+    private static readonly COVER_FILE_NAME = "cover.jpg";
+    private static readonly DEFAULT_TIMEOUT_MS = 30_000;
     private lastCoverUrl: string;
 
     private logger: LoggingFacade = new LoggingFacade({name: 'GeekMagic', color: "orange"});
@@ -104,6 +106,7 @@ class GeekMagicHook implements LastHook {
         return await fetch(`${this.config.url}/doUpload?dir=/image/`, {
             method: "POST",
             body: formData,
+            signal: AbortSignal.signal(this.config.timeoutMs ?? GeekMagicHook.DEFAULT_TIMEOUT_MS)
         });
     }
 }
