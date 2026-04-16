@@ -106,7 +106,7 @@ class GeekMagicHook implements LastHook {
         return await fetch(`${this.config.url}/doUpload?dir=/image/`, {
             method: "POST",
             body: formData,
-            signal: AbortSignal.signal(this.config.timeoutMs ?? GeekMagicHook.DEFAULT_TIMEOUT_MS)
+            signal: AbortSignal.timeout(this.config.timeoutMs ?? GeekMagicHook.DEFAULT_TIMEOUT_MS)
         });
     }
 }
